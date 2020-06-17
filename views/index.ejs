@@ -21,9 +21,15 @@
 <div class="col-sm-4 offset-sm-4" style="margin-top: 50px;">
     <div class="card">
         <article class="card-body">
+            <%if(locals.messages.msg){ %>
+            <div class="alert alert-success" role="alert">
+                <strong>Well done!</strong> <%=locals.messages.msg%>
+            </div>
+            <% } %>
+
             <a href="/logout" class="float-right btn btn-outline-primary">Logout</a>
-            <h4 class="card-title mb-4 mt-1">Welcome Soumen Khara</h4>
-            <form action="/login" method="POST">
+            <h4 class="card-title mb-4 mt-1">Welcome <%= user.username %> </h4>
+            <form action="/submit" method="POST">
                 <div class="form-group">
                     <label>Your Message</label>
                     <textarea name="comment" class="form-control" rows="5" id="comment"></textarea>
@@ -31,6 +37,12 @@
                 <div class="form-group">
                     <button type="submit" class=" btn  btn-outline-primary"> Submit </button>
                 </div>
+                <% user.comment.forEach(element=>{%>
+                <div class="alert alert-secondary" role="alert"><%= element%>
+                </div>
+
+                <%   }) %>
+
             </form>
         </article>
     </div>

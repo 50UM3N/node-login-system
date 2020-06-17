@@ -20,6 +20,11 @@
 <div class="col-sm-4 offset-sm-4" style="margin-top: 50px;">
     <div class="card">
         <article class="card-body">
+            <% if(locals.messages.msg) {%>
+            <div class="alert alert-danger" role="alert">
+                <%= locals.messages.msg %>
+            </div>
+            <% } %>
             <a href="/login" class="float-right btn btn-outline-primary">Login</a>
             <h4 class="card-title mb-4 mt-1">Sign Up</h4>
             <form action="/signup" method="POST">

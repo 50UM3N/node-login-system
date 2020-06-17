@@ -21,7 +21,18 @@
 <div class="col-sm-4 offset-sm-4" style="margin-top: 50px;">
     <div class="card">
         <article class="card-body">
-            <a href="/signin" class="float-right btn btn-outline-primary">Sign up</a>
+
+            <% if (messages.error) { %>
+            <div class="alert alert-danger" role="alert">
+                <%= messages.error %>
+            </div>
+            <% } %>
+            <% if (locals.messages.success) { %>
+            <div class="alert alert-success" role="alert">
+                <%= locals.messages.success %>
+            </div>
+            <% } %>
+            <a href="/signup" class="float-right btn btn-outline-primary">Sign up</a>
             <h4 class="card-title mb-4 mt-1">Login</h4>
             <form action="/login" method="POST">
                 <div class="form-group">
