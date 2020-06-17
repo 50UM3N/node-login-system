@@ -6,6 +6,7 @@ const user = require('./schema');
 const flash = require('express-flash');
 const passport = require('passport');
 const cookie = require('cookie-session');
+const authenticator = require('./passport-strategy');
 const port = process.env.PORT || 8000;
 
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
@@ -14,6 +15,7 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
     });
 
 
+authenticator(passport, user);
 app.use(cookie({
     maxAge: 30 * 60 * 1000,
     keys: [process.env.COOKIE_KEY]
@@ -81,32 +83,6 @@ app.post('/submit', authorize, (req, res) => {
     req.flash('msg', 'Message added');
     res.redirect('/');
 })
-const localstrategy = require('passport-local').Strategy
-passport.use(new localstrategy({ usernameField: 'email' }, (email, password, done) => {
-    user.findOne({ email: email }, (err, data) => {
-        if (err) return done(err);
-        if (!data) {
-            console.log('user not found');
-            return done(null, false, { message: 'No user with that email' });
-        }
-        else {
-            if (data.password == password) {
-                return done(null, data);
-            }
-            else
-                return done(null, false, { message: 'Password incorrect' });
-
-        }
-    });
-}));
-passport.serializeUser((data, done) => done(null, data.id));
-passport.deserializeUser((id, done) => {
-    user.findById(id, (err, data) => {
-        done(null, data);
-    });
-});
-
-
 app.get('/', authorize, (req, res) => {
     res.render('index.ejs', { user: req.user });
 });
