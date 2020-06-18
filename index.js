@@ -7,8 +7,9 @@ const flash = require('express-flash');
 const passport = require('passport');
 const cookie = require('cookie-session');
 const authenticator = require('./passport-strategy');
+const nodemailer = require('nodemailer');
+const sendmail = require('./sendmail');
 const port = process.env.PORT || 8000;
-
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(() => {
         console.log('Database Connected');
@@ -82,7 +83,26 @@ app.post('/submit', authorize, (req, res) => {
         })
     req.flash('msg', 'Message added');
     res.redirect('/');
+});
+app.post('/nodemailer', (req, res) => {
+    sendmail({
+        nodemailer: nodemailer,
+        email: process.env.MAIL,
+        password: process.env.PASSWORD,
+        data: req.body
+    }, (err, success) => {
+        if (err) {
+            req.flash('err', 'Message not send')
+            return res.redirect('/nodemailer')
+        }
+        if (success) {
+            req.flash('success', 'Message send')
+            return res.redirect('/nodemailer')
+        }
+    })
 })
+
+
 app.get('/', authorize, (req, res) => {
     res.render('index.ejs', { user: req.user });
 });
@@ -95,6 +115,9 @@ app.get('/signup', notAuthorize, (req, res) => {
 app.get('/logout', (req, res) => {
     req.logOut();
     res.redirect('/login')
+})
+app.get('/nodemailer', (req, res) => {
+    res.render('nodemail.ejs')
 })
 app.listen(port, (e) => {
     if (e) console.log(e)
