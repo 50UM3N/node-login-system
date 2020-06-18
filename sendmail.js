@@ -2,6 +2,7 @@ function sendmail({ nodemailer, email, password, data, structure }, done) {
     console.log(email, password, data, structure)
     var transporter = nodemailer.createTransport({
         service: 'gmail',
+        host: 'smtp.gmail.com',
         auth: {
             user: email,
             pass: password
