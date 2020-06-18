@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,40 +15,32 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-    <title>Sign up</title>
+    <title>Forget Password</title>
 </head>
 
 <div class="col-sm-4 offset-sm-4" style="margin-top: 50px;">
     <div class="card">
         <article class="card-body">
-            <% if(locals.messages.msg) {%>
+
+            <% if (messages.err) { %>
             <div class="alert alert-danger" role="alert">
-                <%= locals.messages.msg %>
+                <%= messages.err %>
+            </div>
+            <% } %>
+            <% if (locals.messages.success) { %>
+            <div class="alert alert-success" role="alert">
+                <%= locals.messages.success %>
             </div>
             <% } %>
             <a href="/login" class="float-right btn btn-outline-primary">Login</a>
-            <a href="/nodemailer" class="float-right btn btn-outline-primary" style="margin-right: 10px;">Contact</a>
-            <h4 class="card-title mb-4 mt-1">Sign Up</h4>
-            <form action="/signup" method="POST">
-                <div class="form-group">
-                    <label>Your Username</label>
-                    <input name="username" class="form-control" placeholder="Username" type="username" required>
-                </div>
+            <h4 class="card-title mb-4 mt-1">Forget Password</h4>
+            <form action="/forget" method="POST">
                 <div class="form-group">
                     <label>Your email</label>
-                    <input name="email" class="form-control" placeholder="Email" type="email" required>
+                    <input name="email" class="form-control" placeholder="Email" type="email">
                 </div>
                 <div class="form-group">
-                    <label>Your password</label>
-                    <input name="password" class="form-control" placeholder="Password" type="password" required>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label> <input type="checkbox"> Save password </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Login </button>
+                    <button type="submit" class="btn btn-primary btn-block"> Submit </button>
                 </div>
             </form>
         </article>

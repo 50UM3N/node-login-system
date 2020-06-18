@@ -49,18 +49,18 @@ app.post('/signup', (req, res) => {
                 password
             }).save((err, data) => {
                 if (err) {
-                    console.log('Error in database')
+                    console.log('Error in database');
                     req.flash('msg', 'Sign Up Unsuccessful');
                     res.redirect('/signup');
                 }
                 if (data) {
                     console.log(data);
-                    req.flash('success', 'Sign Up Successful')
+                    req.flash('success', 'Sign Up Successful');
                     res.redirect('/login');
                 }
-            })
+            });
         }
-    })
+    });
 });
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/',
@@ -77,7 +77,7 @@ app.post('/submit', authorize, (req, res) => {
             }
         }, (err, data) => {
             if (err) {
-                console.log(err)
+                console.log(err);
             }
             if (data) console.log(data);
         })
@@ -89,19 +89,51 @@ app.post('/nodemailer', (req, res) => {
         nodemailer: nodemailer,
         email: process.env.MAIL,
         password: process.env.PASSWORD,
-        data: req.body
+        data: req.body,
+        structure: 'contact'
     }, (err, success) => {
         if (err) {
-            req.flash('err', 'Message not send')
-            return res.redirect('/nodemailer')
+            req.flash('err', 'Message not send');
+            return res.redirect('/nodemailer');
         }
         if (success) {
-            req.flash('success', 'Message send')
-            return res.redirect('/nodemailer')
+            req.flash('success', 'Message send');
+            return res.redirect('/nodemailer');
         }
-    })
-})
+    });
+});
 
+app.post('/forget', (req, res) => {
+    const email = req.body.email;
+    user.findOne({ email: email }, (err, data) => {
+        if (err) {
+            req.flash('err', 'Service error');
+            return res.redirect('/forget');
+        }
+        if (data) {
+            sendmail({
+                nodemailer: nodemailer,
+                email: process.env.MAIL,
+                password: process.env.PASSWORD,
+                data: data,
+                structure: 'forget'
+            }, (err, success) => {
+                if (err) {
+                    req.flash('err', 'Message not send');
+                    return res.redirect('/forget');
+                }
+                if (success) {
+                    req.flash('success', 'Password is sent to your email address');
+                    return res.redirect('/forget');
+                }
+            });
+        }
+        if (!data) {
+            req.flash('err', 'There is no user with that Email');
+            return res.redirect('/forget');
+        }
+    });
+});
 
 app.get('/', authorize, (req, res) => {
     res.render('index.ejs', { user: req.user });
@@ -114,13 +146,16 @@ app.get('/signup', notAuthorize, (req, res) => {
 });
 app.get('/logout', (req, res) => {
     req.logOut();
-    res.redirect('/login')
-})
+    res.redirect('/login');
+});
 app.get('/nodemailer', (req, res) => {
     res.render('nodemail.ejs')
-})
+});
+app.get('/forget', (req, res) => {
+    res.render('forget.ejs');
+});
 app.listen(port, (e) => {
-    if (e) console.log(e)
+    if (e) console.log(e);
     else console.log(`Listen on: http://127.0.0.1:${port}`);
 })
 function authorize(req, res, next) {
