@@ -1,4 +1,5 @@
 function sendmail({ nodemailer, email, password, data, structure }, done) {
+    console.log(email, password, data, structure)
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -28,6 +29,7 @@ function sendmail({ nodemailer, email, password, data, structure }, done) {
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
+            console.log(error);
             done('message not send', null);
         } else {
             done(null, info.response);
